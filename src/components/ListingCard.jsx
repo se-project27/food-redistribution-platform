@@ -1,8 +1,14 @@
+import React from "react";
+import { formatDate } from "../utils/formatDate";
+
 const ListingCard = ({ listing }) => {
   return (
-    <div className="border p-4 rounded shadow mb-3">
-      <h3 className="font-bold">{listing.title}</h3>
-      <p>Quantity: {listing.quantity}</p>
+    <div className="border rounded-xl p-4 shadow-md">
+      <h3 className="text-lg font-semibold">{listing.title}</h3>
+      <p>{listing.description}</p>
+      <p className="text-sm text-gray-500">
+        Posted: {formatDate(listing.createdAt)}
+      </p>
     </div>
   );
 };
