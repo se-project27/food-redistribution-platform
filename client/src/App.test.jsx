@@ -33,8 +33,8 @@ vi.mock('leaflet', () => {
 describe('App Component', () => {
     it('renders the main title', () => {
         render(<App />);
-        // Based on translations.en.title "♻️ Food Redistribution Platform"
-        const titleElement = screen.getByText(/Food Redistribution Platform/i);
+        // The app is branded as "GiveBite" in the Navbar
+        const titleElement = screen.getByText(/Give/i);
         expect(titleElement).toBeInTheDocument();
     });
 });
