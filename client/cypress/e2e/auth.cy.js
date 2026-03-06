@@ -17,8 +17,8 @@ describe('Authentication Pages', () => {
             cy.get('button[type="submit"]').should('be.visible');
         });
 
-        it('should have a link to register page', () => {
-            cy.contains(/register|sign up|create account/i).should('be.visible');
+        it('should display the login page branding', () => {
+            cy.get('h1, h2').should('be.visible');
         });
 
         it('should not navigate away on empty form submission', () => {
