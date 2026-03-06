@@ -1,0 +1,1 @@
+export const shouldBanUser = (avgRating) => avgRating < 2;
