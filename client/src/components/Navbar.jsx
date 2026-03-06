@@ -3,6 +3,36 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 
+// Extracted outside Navbar to satisfy react-hooks/no-nested-components
+function NavLink({ to, children, location }) {
+  const isActive = location.pathname === to;
+
+  return (
+    <Link to={to} className="relative group flex items-center">
+      <AnimatePresence>
+        {isActive && (
+          <motion.span
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            className="absolute -left-3 w-1.5 h-1.5 bg-orange-500 rounded-full"
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.span
+        className={`text-sm lg:text-base transition-colors duration-300 ${isActive
+          ? "text-emerald-900 font-extrabold"
+          : "text-gray-600 font-medium group-hover:text-emerald-700"
+          }`}
+        whileHover={{ x: 2 }}
+      >
+        {children}
+      </motion.span>
+    </Link>
+  );
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -68,37 +98,6 @@ export default function Navbar() {
     { name: 'Contact', path: '/contact' },
   ];
 
-  // Custom NavLink Component for consistent active state styling
-  const NavLink = ({ to, children }) => {
-    const isActive = location.pathname === to;
-
-    return (
-      <Link to={to} className="relative group flex items-center">
-        {/* Active Dot Indicator */}
-        <AnimatePresence>
-          {isActive && (
-            <motion.span
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              className="absolute -left-3 w-1.5 h-1.5 bg-orange-500 rounded-full"
-            />
-          )}
-        </AnimatePresence>
-
-        <motion.span
-          className={`text-sm lg:text-base transition-colors duration-300 ${isActive
-            ? "text-emerald-900 font-extrabold"
-            : "text-gray-600 font-medium group-hover:text-emerald-700"
-            }`}
-          whileHover={{ x: 2 }}
-        >
-          {children}
-        </motion.span>
-      </Link>
-    );
-  };
-
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -129,7 +128,7 @@ export default function Navbar() {
 
             {/* Standard Links */}
             {navLinks.map((link) => (
-              <NavLink key={link.name} to={link.path}>{link.name}</NavLink>
+              <NavLink key={link.name} to={link.path} location={location}>{link.name}</NavLink>
             ))}
 
             {/* Solutions Dropdown */}
@@ -173,7 +172,7 @@ export default function Navbar() {
 
             {/* Dashboard Link (If logged in) */}
             {user && (
-              <NavLink to="/dashboard">Dashboard</NavLink>
+              <NavLink to="/dashboard" location={location}>Dashboard</NavLink>
             )}
           </div>
 

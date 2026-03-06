@@ -36,20 +36,23 @@ export default function Chatbot() {
     const [input, setInput] = useState('');
     const [role, setRole] = useState(localStorage.getItem('user_role') || 'General');
     const messagesEndRef = useRef(null);
+    const idCounter = useRef(0);
+
+    const getNextId = () => ++idCounter.current;
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
 
     useEffect(() => {
         localStorage.setItem('chat_history', JSON.stringify(messages));
         scrollToBottom();
     }, [messages]);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
     const handleSend = (text) => {
         if (!text.trim()) return;
 
-        const userMessage = { id: Date.now(), text, sender: 'user' };
+        const userMessage = { id: getNextId(), text, sender: 'user' };
         setMessages(prev => [...prev, userMessage]);
         setInput('');
 
@@ -67,16 +70,16 @@ export default function Chatbot() {
                 response = `Hello! I'm the ${role} support bot. Ask me anything about ${role === 'Donor' ? 'donating' : role === 'NGO' ? 'claiming' : 'delivering'} food!`;
             }
 
-            setMessages(prev => [...prev, { id: Date.now() + 1, text: response, sender: 'bot' }]);
+            setMessages(prev => [...prev, { id: getNextId(), text: response, sender: 'bot' }]);
         }, 600);
     };
 
     const handleFAQClick = (faq) => {
-        const userMessage = { id: Date.now(), text: faq.q, sender: 'user' };
+        const userMessage = { id: getNextId(), text: faq.q, sender: 'user' };
         setMessages(prev => [...prev, userMessage]);
 
         setTimeout(() => {
-            const botMessage = { id: Date.now() + 1, text: faq.a, sender: 'bot' };
+            const botMessage = { id: getNextId(), text: faq.a, sender: 'bot' };
             setMessages(prev => [...prev, botMessage]);
         }, 400);
     };

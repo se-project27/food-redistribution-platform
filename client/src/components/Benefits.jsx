@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { BadgeCheck, Scale, FileBarChart2 } from "lucide-react";
 
 export default function Benefits() {
@@ -52,12 +51,12 @@ export default function Benefits() {
           <h4 className="text-gray-500 font-bold tracking-widest uppercase text-xs mb-8">Ecosystem Partners</h4>
           <h3 className="text-2xl font-bold text-gray-900 mb-10">Join the Movement</h3>
           <div className="flex flex-wrap justify-center items-center gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-             {/* Using typography placeholders for logos to match the greyed-out visual look */}
-             <span className="text-2xl font-black font-serif">City Harvest</span>
-             <span className="text-xl font-bold tracking-tighter">EventBrite Cares</span>
-             <span className="text-2xl font-extrabold italic">FoodCycle</span>
-             <span className="text-xl font-bold font-mono">UNIV-KITCHENS</span>
-             <span className="text-2xl font-medium tracking-widest">SHELTER+</span>
+            {/* Using typography placeholders for logos to match the greyed-out visual look */}
+            <span className="text-2xl font-black font-serif">City Harvest</span>
+            <span className="text-xl font-bold tracking-tighter">EventBrite Cares</span>
+            <span className="text-2xl font-extrabold italic">FoodCycle</span>
+            <span className="text-xl font-bold font-mono">UNIV-KITCHENS</span>
+            <span className="text-2xl font-medium tracking-widest">SHELTER+</span>
           </div>
         </div>
       </div>
