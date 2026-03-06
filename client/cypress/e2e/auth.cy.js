@@ -18,6 +18,12 @@ describe('Authentication Pages', () => {
             cy.contains(/register|sign up|create account/i).should('be.visible');
         });
 
+        it('should not navigate away on empty form submission', () => {
+            cy.get('button[type="submit"]').click();
+            // Should remain on the login page (form validation prevents navigation)
+            cy.url().should('include', '/login');
+        });
+
         it('should show error on invalid login attempt', () => {
             cy.get('input[type="email"], input[name="email"]').type('invalid@test.com');
             cy.get('input[type="password"], input[name="password"]').type('wrongpassword');

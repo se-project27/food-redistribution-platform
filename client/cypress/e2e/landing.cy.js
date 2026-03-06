@@ -27,9 +27,9 @@ describe('Landing Page', () => {
         cy.contains('Log in').should('be.visible');
     });
 
-    it('should have the chatbot button present', () => {
-        // The chatbot toggle button should be on the page
-        cy.get('button').filter(':contains("💬"), :contains("✕")').should('exist');
+    it('should have the chatbot widget present', () => {
+        // The chatbot uses .chatbot-container class
+        cy.get('.chatbot-container').should('exist');
     });
 
     it('should display the hero section content', () => {
