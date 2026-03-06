@@ -2,18 +2,18 @@
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 18, Vite, Tailwind CSS |
-| **Backend** | Node.js, Express.js |
-| **Database** | MongoDB (Mongoose ODM) |
-| **Auth** | JWT (jsonwebtoken), bcryptjs |
-| **Testing** | Jest (backend), Vitest (frontend) |
-| **CI/CD** | GitHub Actions → Vercel |
-| **Animations** | Framer Motion |
-| **Maps** | Leaflet / React-Leaflet |
-| **Icons** | Lucide React |
-| **i18n** | Google Translate Widget |
+| Layer          | Technology                        |
+| -------------- | --------------------------------- |
+| **Frontend**   | React 18, Vite, Tailwind CSS      |
+| **Backend**    | Node.js, Express.js               |
+| **Database**   | MongoDB (Mongoose ODM)            |
+| **Auth**       | JWT (jsonwebtoken), bcryptjs      |
+| **Testing**    | Jest (backend), Vitest (frontend) |
+| **CI/CD**      | GitHub Actions → Vercel           |
+| **Animations** | Framer Motion                     |
+| **Maps**       | Leaflet / React-Leaflet           |
+| **Icons**      | Lucide React                      |
+| **i18n**       | Google Translate Widget           |
 
 ---
 
@@ -75,11 +75,13 @@ food-organisation-platform/
 ## Local Development Setup
 
 ### Prerequisites
+
 - Node.js ≥ 18
 - MongoDB (local or Atlas)
 - Git
 
 ### Backend Setup
+
 ```bash
 cd backend
 cp .env.example .env    # Configure MONGO_URI, JWT_SECRET, CLIENT_URL
@@ -88,6 +90,7 @@ npm start               # Starts on http://localhost:5000
 ```
 
 ### Frontend Setup
+
 ```bash
 cd client
 npm install
@@ -97,6 +100,7 @@ npm run dev             # Starts on http://localhost:5173
 ### Environment Variables
 
 **Backend (`.env`):**
+
 ```
 MONGO_URI=mongodb+srv://...
 JWT_SECRET=your-secret-key
@@ -108,20 +112,54 @@ PORT=5000
 
 ## Testing
 
-### Backend Tests (Jest)
+### 1. Backend Tests (Jest + MongoDB Memory Server)
+
 ```bash
 cd backend
 npm test
 ```
 
-### Frontend Tests (Vitest)
+| Test File             | Type        | Coverage Description                                  |
+|-----------------------|-------------|-------------------------------------------------------|
+| `auth.test.js`        | Integration | Registration, login, profile endpoints                |
+| `listings.test.js`    | Integration | CRUD operations, search, deletion with auth           |
+| `stats.test.js`       | Integration | Platform statistics and leaderboard endpoints         |
+| `ban_unban.test.js`   | Integration | Admin user moderation workflows                       |
+| `integration.test.js` | Integration | Workflows: auth lifecycle, donate→claim               |
+| `regression.test.js`  | Regression  | Edge cases: duplicate emails, tokens, expiry filters  |
+
+### 2. Frontend Tests (Vitest)
+
 ```bash
 cd client
 npm test -- --run       # Single run
 npm test                # Watch mode
 ```
 
+| Test File              | Type        | Coverage Description                                   |
+|------------------------|-------------|--------------------------------------------------------|
+| `App.test.jsx`         | Unit        | App rendering & GiveBite branding                      |
+| `integration.test.jsx` | Integration | Navbar, Chatbot, CTA buttons, protected route guards   |
+| `regression.test.jsx`  | Regression  | Polyfills, unused imports, chatbot scroll bug fixes    |
+
+### 3. E2E Tests (Cypress)
+
+```bash
+cd client
+npm run e2e             # Opens Cypress UI (interactive)
+npm run e2e:headless    # Runs in terminal (headless)
+```
+
+> **Note:** The Vite dev server must be running (`npm run dev`) for e2e tests.
+
+| Test Suite         | Tests | Coverage Description                                  |
+|--------------------|-------|-------------------------------------------------------|
+| `landing.cy.js`    | 6     | Branding, navbar, hero, chatbot widget, CTA           |
+| `navigation.cy.js` | 7     | Flow between all public pages + 404 redirects         |
+| `auth.cy.js`       | 10    | Login/Register forms, token routing, route guards     |
+
 ### Linting
+
 ```bash
 cd client
 npm run lint            # ESLint with React hooks rules
@@ -134,18 +172,20 @@ npm run lint            # ESLint with React hooks rules
 The GitHub Actions pipeline (`.github/workflows/ci.yml`) runs on every push to `main`:
 
 ```
-Push → Lint (non-blocking) → Backend Tests → Frontend Tests → Build → Deploy to Vercel
+Push → Lint → Backend Tests → Frontend Tests → Build → E2E Tests → Deploy to Vercel
 ```
 
-| Stage | Tool | Blocking |
-|-------|------|----------|
-| Lint | ESLint | ⚠️ Warnings only |
-| Test Backend | Jest | ✅ Blocking |
-| Test Frontend | Vitest | ✅ Blocking |
-| Build | Vite | ✅ Blocking |
-| Deploy | Vercel CLI | ✅ Production |
+| Stage         | Tool       | Requirement           |
+|---------------|------------|-----------------------|
+| Lint          | ESLint     | ⚠️ Non-blocking       |
+| Test Backend  | Jest       | ✅ Blocking           |
+| Test Frontend | Vitest     | ✅ Blocking           |
+| Build         | Vite       | ✅ Blocking           |
+| E2E Tests     | Cypress    | ✅ Blocking           |
+| Deploy        | Vercel CLI | ✅ Prod (main only)   |
 
 ### Secrets Required
+
 - `VERCEL_TOKEN` — Vercel API token for deployment
 
 ---
@@ -153,22 +193,26 @@ Push → Lint (non-blocking) → Backend Tests → Frontend Tests → Build → 
 ## Data Models
 
 ### User
+
 - Roles: `Donor`, `NGO`, `Volunteer`, `Admin`
 - Features: location, service radius, credits, streaks, badges, ban status
 - Volunteer-specific: `isAvailable`, `isTrained`, `totalDeliveries`
 - NGO-specific: `ngoRegNumber`, `ngoCapacity`, `isVerified`
 
 ### FoodListing
+
 - Status flow: `Available` → `Claimed` → `In Transit` → `Delivered` (or `Cancelled`)
 - Smart expiry: auto-filtered based on `expiry_hours` from `createdAt`
 - Safety: `reports[]` array, `allergens[]`, `handlingInstructions`
 - QR workflow: `isReadyForPickup`, `pickupProof`
 
 ### FoodNeed
+
 - Posted by NGOs with category, quantity, urgency, location
 - Matched against available listings via matching engine
 
 ### Notification
+
 - Types: `Info`, `Success`, `Warning`
 - Auto-generated for: nearby donations, status changes, deliveries
 
@@ -176,10 +220,10 @@ Push → Lint (non-blocking) → Backend Tests → Frontend Tests → Build → 
 
 ## Key Architecture Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| JWT auth over sessions | Stateless, scales horizontally, works with SPA |
-| Monolithic Dashboard (190KB) | Single-page role-based experience, avoids route complexity |
-| Geofencing via Haversine | No external service needed, calculates distance from lat/lng |
-| Credits system | Gamification to incentivize participation |
-| Non-blocking lint | Legacy code has warnings; tests are the quality gate |
+| Decision                     | Rationale                                                    |
+| ---------------------------- | ------------------------------------------------------------ |
+| JWT auth over sessions       | Stateless, scales horizontally, works with SPA               |
+| Monolithic Dashboard (190KB) | Single-page role-based experience, avoids route complexity   |
+| Geofencing via Haversine     | No external service needed, calculates distance from lat/lng |
+| Credits system               | Gamification to incentivize participation                    |
+| Non-blocking lint            | Legacy code has warnings; tests are the quality gate         |
