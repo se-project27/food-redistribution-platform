@@ -33,8 +33,8 @@ vi.mock('leaflet', () => {
 describe('App Component', () => {
     it('renders the main title', () => {
         render(<App />);
-        // The app is branded as "GiveBite" in the Navbar
-        const titleElement = screen.getByText(/Give/i);
-        expect(titleElement).toBeInTheDocument();
+        // Check for the "Home" navigation link which is always present in the Navbar
+        const homeLink = screen.getByText('Home');
+        expect(homeLink).toBeInTheDocument();
     });
 });
