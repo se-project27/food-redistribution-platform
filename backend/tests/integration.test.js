@@ -30,7 +30,7 @@ describe('Backend Integration Tests — Full Workflows', () => {
 
         donorUser = await User.create({
             name: 'Test Donor', email: 'donor@test.com', password: hashedPassword,
-            role: 'Donor', phone: '1111111111', address: 'Donor Address'
+            role: 'Donor', phone: '1111111111', address: 'Donor Address', isVerified: true
         });
         ngoUser = await User.create({
             name: 'Test NGO', email: 'ngo@test.com', password: hashedPassword,
@@ -79,6 +79,9 @@ describe('Backend Integration Tests — Full Workflows', () => {
                     quantity: 10, unit: 'kg', category: 'Cooked',
                     expiry_hours: 24, isVeg: true, lat: 13.0827, lng: 80.2707
                 });
+            if (createRes.statusCode !== 200) {
+                console.error("DONATE-CLAIM ERROR:", createRes.statusCode, createRes.body);
+            }
             expect(createRes.statusCode).toEqual(200);
             const listingId = createRes.body._id;
 
@@ -107,6 +110,9 @@ describe('Backend Integration Tests — Full Workflows', () => {
 
             // Step 2: Fetch all
             const res = await request(app).get('/api/listings');
+            if (res.statusCode !== 200) {
+                console.error("FETCH LISTING ERROR:", res.statusCode, res.body);
+            }
             expect(res.statusCode).toEqual(200);
             const found = res.body.find(l => l.title === 'Integration Test Food');
             expect(found).toBeDefined();
@@ -126,6 +132,9 @@ describe('Backend Integration Tests — Full Workflows', () => {
                 });
 
             const res = await request(app).get('/api/listings?search=biryani');
+            if (res.statusCode !== 200) {
+                console.error("SEARCH LISTING ERROR:", res.statusCode, res.body);
+            }
             expect(res.statusCode).toEqual(200);
             expect(res.body.length).toBeGreaterThan(0);
             expect(res.body[0].title).toContain('Biryani');
