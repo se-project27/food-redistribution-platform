@@ -14,6 +14,9 @@ export const checkMatchesForListing = async (listing) => {
         }).populate('ngo');
 
         const matches = openNeeds.filter(need => {
+            if (!listing.location || !listing.location.lat || !need.location || !need.location.lat) {
+                return false;
+            }
             const dist = calculateDistance(
                 listing.location.lat,
                 listing.location.lng,
@@ -60,6 +63,9 @@ export const checkMatchesForNeed = async (need) => {
         }).populate('donor');
 
         const matches = availableListings.filter(listing => {
+            if (!need.location || !need.location.lat || !listing.location || !listing.location.lat) {
+                return false;
+            }
             const dist = calculateDistance(
                 need.location.lat,
                 need.location.lng,
